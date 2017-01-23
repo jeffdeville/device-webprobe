@@ -1,0 +1,4 @@
+*.pyc
+service/venv/
+modsim/venv/
+service/log/sunspec_device-webprobe/*

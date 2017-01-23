@@ -1,0 +1,3 @@
+CherryPy==10.0.0
+-e git+https://github.com/sunspec/pysunspec.git@abdadd2af85d83f634019cf372976da3b5e504f3#egg=pysunspec
+pyserial==3.2.1
