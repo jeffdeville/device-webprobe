@@ -1,4 +1,4 @@
-This is a web interface to the SunSpec core library and supporting scripts, to probe any SunSpec-conformant device on the Internet. 
+This is a web interface to the SunSpec core library and supporting scripts, to probe any SunSpec-conformant device on the Internet.
 
 There are four components:
 
@@ -8,7 +8,7 @@ There are four components:
 
 3. SunSpec core - a set of python scripts that communicate with SunSpec-compliant  devices
 
-4. device simulator - a set  of python scripts that simulate a SunSpec device, principally for testing everything else 
+4. device simulator - a set  of python scripts that simulate a SunSpec device, principally for testing everything else
 
 
 USAGE:
@@ -16,13 +16,13 @@ USAGE:
 
 device simulator:
 -----------------
-python modsim.py -m tcp mbmap_test_device.xml
+sudo python modsim.py -m tcp mbmap_test_device.xml
 Logs are in /var/log/cherrypy
 
 core:
 -----
 install them on the target system as a python lib.  Beats the hell out of me how to do that
- 
+
 service:
 --------
 sudo cherryd -c suns_device_service.config -i suns_device_service -d
