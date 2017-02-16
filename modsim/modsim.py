@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import signal
 import sys
 import struct
 import socket
@@ -10,6 +11,7 @@ import modbus_tk.modbus_rtu as modbus_rtu
 from modbus_tk.simulator import *
 import mbmap
 from optparse import OptionParser
+from threading import Thread
 
 class ModSimError(Exception):
     pass
@@ -113,8 +115,33 @@ class ModSim(Simulator):
 
         self.server.set_verbose(options.verbose)
 
+    def start(self):
+        self.server.start()
+        self.rpc.start()
+        LOGGER.info('modbus_tk.simulator is running...')
+        self._handle()
+
+    def close(self):
+        """close every server"""
+        # self.console.close()
+        self.rpc.close()
+        self.server.stop()
+
+
+def signal_handler(signm, frame):
+    global sim
+    LOGGER.info('Got Signal %s, exiting now.' % (str(signm)))
+    sim.close()
+    LOGGER.info('Stopped modbus simulator.')
+    sys.exit(0)
 
 if __name__ == "__main__":
+    global sim
+    signal.signal(signal.SIGABRT, signal_handler)
+    signal.signal(signal.SIGHUP, signal_handler)
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGQUIT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
 
     usage = 'usage: %prog [options] map_file'
     parser = OptionParser(usage=usage)
@@ -170,7 +197,7 @@ if __name__ == "__main__":
             socket.gethostbyname(socket.gethostname()), options.port, str(options.id), str(modbus_map.base_addr))
     else:
         print 'Initialized modbus simulator to unknown mode: %s' % (sim.mode)
-    
+
     # add modbus map to simulator slave device
     print 'Modbus map loaded from %s' % args[0]
     slave = sim.server.add_slave(options.id)
@@ -189,10 +216,10 @@ if __name__ == "__main__":
     try:
         LOGGER.info("'quit' for closing the simulator")
         sim.start()
-        
+
     except Exception, e:
         print e
-            
+
     finally:
         sim.close()
 
